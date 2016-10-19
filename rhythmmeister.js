@@ -4,6 +4,8 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
 
     options = options || {};
 
+    var documentRowSize = parseInt(options['document-row-size']);
+
     var getFontPreset = function (name) {
         return options.presets && options.presets[name];
     };
@@ -16,41 +18,58 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
         return Math.ceil(valueToCeil / ceilTo) * ceilTo;
     };
 
-    var documentRowSize = parseInt(options['document-row-size']);
+    var getBorderWidth = function (properties) {
+        var width = false;
+        var propertiesSplit = properties.split(' ');
+
+        propertiesSplit.forEach((property) => {
+           if (parseInt(property)) {
+               width = parseInt(property);
+           }
+        });
+
+        return width;
+    };
+
+    var applyRs = function (declaration) {
+        if (declaration.value.indexOf('rs') !== -1) {
+            var regexp = new RegExp('(\\d*\\.?\\d+)rs', 'gi');
+
+            declaration.value = declaration.value.replace(regexp, function ($1) {
+                return parseFloat($1) * documentRowSize + 'px';
+            });
+        }
+    };
+
+    var applyFontProperties = function (rule, declaration, fontPreset) {
+        var propertiesToSet = ['font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing'];
+
+        propertiesToSet.forEach((property) => {
+            if (fontPreset[property]) {
+                rule.insertAfter(declaration, postcss.parse(property + ': ' + fontPreset[property]));
+            }
+        });
+
+        rule.insertAfter(declaration, postcss.parse('line-height: ' + documentRowSize * fontPreset['rows'] + 'px'));
+    };
+
+    var calculateTopCorrection = function (fontPreset) {
+        var initialFontBase = ((documentRowSize * fontPreset['rows']) / 2) + (parseFloat(fontPreset['base-line-percentage']) - 0.5) * parseInt(fontPreset['font-size']);
+        var wantedFontSize = roundToNumber(initialFontBase, documentRowSize);
+        return wantedFontSize - initialFontBase;
+    };
 
     return function (css) {
 
         css.walkRules(function (rule) {
             rule.walkDecls(function (declaration, i) {
-                if (declaration.value.indexOf('rs') !== -1) {
-                    var regexp = new RegExp('(\\d*\\.?\\d+)rs', 'gi');
-
-                    declaration.value = declaration.value.replace(regexp, function ($1) {
-                        return parseFloat($1) * documentRowSize + 'px';
-                    });
-                }
+                applyRs(declaration);
 
                 if (declaration.prop == 'font-preset' && getFontPreset(declaration.value)) {
                     var fontPreset = getFontPreset(declaration.value);
+                    applyFontProperties(rule, declaration, fontPreset);
 
-                    var propertiesToSet = ['font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing'];
-
-                    propertiesToSet.forEach((property) => {
-                        if (fontPreset[property]) {
-                            rule.insertAfter(declaration, postcss.parse(property + ': ' + fontPreset[property]));
-                        }
-                    });
-
-                    rule.insertAfter(declaration, postcss.parse('line-height: ' + documentRowSize * fontPreset['rows'] + 'px'));
-
-                    var initialFontBase = ((documentRowSize * fontPreset['rows']) / 2) + (parseFloat(fontPreset['base-line-percentage']) - 0.5) * parseInt(fontPreset['font-size']);
-                    var wantedFontSize = roundToNumber(initialFontBase, documentRowSize);
-                    var paddingTopCorrection = wantedFontSize - initialFontBase;
-
-                    if (paddingTopCorrection < 0) {
-                        paddingTopCorrection = documentRowSize + paddingTopCorrection;
-                    }
-
+                    var paddingTopCorrection = calculateTopCorrection(fontPreset);
                     var paddingBottomCorrection = documentRowSize - paddingTopCorrection;
 
                     var previousPaddingTop = 0;
@@ -58,10 +77,34 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                     var paddingLeft = 0;
                     var paddingRight = 0;
 
+                    rule.walkDecls(function (possibleBorder) {
+                        if (possibleBorder.prop == 'border') {
+                            var allBorderWidth = getBorderWidth(possibleBorder.value);
+                            if (allBorderWidth) {
+                                paddingTopCorrection = paddingTopCorrection - allBorderWidth;
+                                paddingBottomCorrection = paddingBottomCorrection - allBorderWidth;
+                            }
+                        }
+
+                        if (possibleBorder.prop == 'border-top') {
+                            var borderTopWidth = getBorderWidth(possibleBorder.value);
+                            if (borderTopWidth) {
+                                paddingTopCorrection = paddingTopCorrection - borderTopWidth;
+                            }
+                        }
+
+                        if (possibleBorder.prop == 'border-bottom') {
+                            var borderBottomWidth = getBorderWidth(possibleBorder.value);
+                            if (borderBottomWidth) {
+                                paddingBottomCorrection = paddingBottomCorrection - borderBottomWidth;
+                            }
+                        }
+                    });
+
                     rule.walkDecls(function (possiblePadding) {
                         if (possiblePadding.prop == 'padding') {
-                            var paddings = possiblePadding.value.split(' ');
 
+                            var paddings = possiblePadding.value.split(' ');
                             if (paddings.length < 3) {
                                 previousPaddingTop = parseInt(paddings[0]);
                                 previousPaddingBottom = parseInt(paddings[0]);
@@ -102,14 +145,12 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                         }
                     });
 
-                    if (options['use existing padding as min padding']) {
-                        if (paddingTopCorrection < previousPaddingTop) {
-                            paddingTopCorrection = ceilToNumber(documentRowSize, previousPaddingTop) + paddingTopCorrection;
-                        }
+                    if (paddingTopCorrection < previousPaddingTop) {
+                        paddingTopCorrection = ceilToNumber(documentRowSize, previousPaddingTop) + paddingTopCorrection;
+                    }
 
-                        if (paddingBottomCorrection < previousPaddingBottom) {
-                            paddingBottomCorrection = ceilToNumber(documentRowSize, previousPaddingBottom) + paddingBottomCorrection;
-                        }
+                    if (paddingBottomCorrection < previousPaddingBottom) {
+                        paddingBottomCorrection = ceilToNumber(documentRowSize, previousPaddingBottom) + paddingBottomCorrection;
                     }
 
                     if (paddingTopCorrection) {

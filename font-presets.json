@@ -1,6 +1,5 @@
 {
   "document-row-size": "12px",
-  "use existing padding as min padding": true,
   "presets": {
     "paragraphs": {
       "font-family": "'Abhaya Libre', serif",
