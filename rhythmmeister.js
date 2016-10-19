@@ -9,7 +9,7 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
     var getFontPreset = function (localOptions, name) {
         return localOptions.presets && localOptions.presets[name];
     };
-``
+
     var roundToNumber = function (valueToRound, roundTo) {
         return Math.round(valueToRound / roundTo) * roundTo;
     };
@@ -53,13 +53,19 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
         rule.insertAfter(declaration, postcss.parse('line-height: ' + documentRowSize * fontPreset['rows'] + 'px'));
     };
 
-    var calculateTopCorrection = function (fontPreset) {
-        var initialFontBase = ((documentRowSize * fontPreset['rows']) / 2) + (parseFloat(fontPreset['base-line-percentage']) - 0.5) * parseInt(fontPreset['font-size']);
-        var wantedFontSize = roundToNumber(initialFontBase, documentRowSize);
-        return wantedFontSize - initialFontBase;
+    var calculateTopCorrection = function (fontPreset, localDocumentRowSize) {
+        var initialFontBase = ((localDocumentRowSize * fontPreset['rows']) / 2) + (parseFloat(fontPreset['base-line-percentage']) - 0.5) * parseInt(fontPreset['font-size']);
+        var wantedFontSize = roundToNumber(initialFontBase, localDocumentRowSize);
+        var topCorrection = wantedFontSize - initialFontBase;
+
+        if (topCorrection < localDocumentRowSize) {
+            topCorrection = topCorrection + localDocumentRowSize;
+        }
+
+        return topCorrection;
     };
 
-    var subtractBorderTop = function (rule, paddingTopCorrection) {
+    var subtractBorderTop = function (rule, paddingTopCorrection, localDocumentRowSize) {
         rule.walkDecls(function (possibleBorder) {
             if (possibleBorder.prop == 'border') {
                 var allBorderWidth = getBorderWidth(possibleBorder.value);
@@ -76,10 +82,14 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
             }
         });
 
+        if (paddingTopCorrection < 0) {
+            paddingTopCorrection = paddingTopCorrection + localDocumentRowSize;
+        }
+
         return paddingTopCorrection;
     };
 
-    var subtractBorderBottom = function (rule, paddingBottomCorrection) {
+    var subtractBorderBottom = function (rule, paddingBottomCorrection, localDocumentRowSize) {
         rule.walkDecls(function (possibleBorder) {
             if (possibleBorder.prop == 'border') {
                 var allBorderWidth = getBorderWidth(possibleBorder.value);
@@ -95,6 +105,10 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                 }
             }
         });
+
+        if (paddingBottomCorrection < 0) {
+            paddingBottomCorrection = paddingBottomCorrection + localDocumentRowSize;
+        }
 
         return paddingBottomCorrection;
     };
@@ -183,11 +197,13 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                     var fontPreset = getFontPreset(options, declaration.value);
                     applyFontProperties(rule, declaration, fontPreset);
 
-                    var paddingTopCorrection = calculateTopCorrection(fontPreset);
+                    var paddingTopCorrection = calculateTopCorrection(fontPreset, documentRowSize);
                     var paddingBottomCorrection = documentRowSize - paddingTopCorrection;
 
-                    paddingTopCorrection = subtractBorderTop(rule, paddingTopCorrection);
-                    paddingBottomCorrection = subtractBorderBottom(rule, paddingBottomCorrection);
+                    paddingTopCorrection = subtractBorderTop(rule, paddingTopCorrection, documentRowSize);
+                    paddingBottomCorrection = subtractBorderBottom(rule, paddingBottomCorrection, documentRowSize);
+
+                    console.log(paddingBottomCorrection)
 
                     fixPadding(rule, declaration, paddingTopCorrection, paddingBottomCorrection);
 
