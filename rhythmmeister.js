@@ -203,8 +203,6 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                     paddingTopCorrection = subtractBorderTop(rule, paddingTopCorrection, documentRowSize);
                     paddingBottomCorrection = subtractBorderBottom(rule, paddingBottomCorrection, documentRowSize);
 
-                    console.log(paddingBottomCorrection)
-
                     fixPadding(rule, declaration, paddingTopCorrection, paddingBottomCorrection);
 
                     declaration.remove();
