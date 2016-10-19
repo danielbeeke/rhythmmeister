@@ -1,5 +1,8 @@
 # RhythmMeister PostCSS
 
+This helps creating a vertical grid for texts on the almighty interwebs.
+Check out http://rhythmmeister.com/ for a visible explanation.
+
 How to use?
 
 Add the plugin to grunt or gulp like you normally would with a postcss plugin.
