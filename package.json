@@ -1,0 +1,8 @@
+{
+  "name": "rhythmmeister",
+  "version": "1.0.0",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-postcss": "^6.2.0"
+  }
+}
