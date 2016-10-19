@@ -22,6 +22,14 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
 
         css.walkRules(function (rule) {
             rule.walkDecls(function (declaration, i) {
+                if (declaration.value.indexOf('rs') !== -1) {
+                    var regexp = new RegExp('(\\d*\\.?\\d+)rs', 'gi');
+
+                    declaration.value = declaration.value.replace(regexp, function ($1) {
+                        return parseFloat($1) * documentRowSize + 'px';
+                    });
+                }
+
                 if (declaration.prop == 'font-preset' && getFontPreset(declaration.value)) {
                     var fontPreset = getFontPreset(declaration.value);
 
@@ -47,32 +55,54 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
 
                     var previousPaddingTop = 0;
                     var previousPaddingBottom = 0;
+                    var paddingLeft = 0;
+                    var paddingRight = 0;
+
+                    rule.walkDecls(function (possiblePadding) {
+                        if (possiblePadding.prop == 'padding') {
+                            var paddings = possiblePadding.value.split(' ');
+
+                            if (paddings.length < 3) {
+                                previousPaddingTop = parseInt(paddings[0]);
+                                previousPaddingBottom = parseInt(paddings[0]);
+                            }
+
+                            else {
+                                previousPaddingTop = parseInt(paddings[0]);
+                                previousPaddingBottom = parseInt(paddings[2]);
+                            }
+
+                            if (paddings.length == 1) {
+                                paddingLeft = paddings[0];
+                                paddingRight = paddings[0];
+                            }
+
+                            else if (paddings.length > 1) {
+                                paddingLeft = paddings[1];
+                            }
+
+                            else if (paddings.length > 3) {
+                                paddingRight = paddings[3];
+                            }
+                            else {
+                                paddingRight = paddings[1];
+                            }
+
+                            possiblePadding.remove();
+                        }
+
+                        if (possiblePadding.prop == 'padding-top') {
+                            previousPaddingTop = parseInt(possiblePadding.value);
+                            possiblePadding.remove();
+                        }
+
+                        if (possiblePadding.prop == 'padding-bottom') {
+                            previousPaddingBottom = parseInt(possiblePadding.value);
+                            possiblePadding.remove();
+                        }
+                    });
 
                     if (options['use existing padding as min padding']) {
-                        rule.walkDecls(function (possiblePadding) {
-                            if (possiblePadding.prop == 'padding') {
-                                var paddings = possiblePadding.value.split(' ');
-
-                                if (paddings.length < 3) {
-                                    previousPaddingTop = parseInt(paddings[0]);
-                                    previousPaddingBottom = parseInt(paddings[0]);
-                                }
-
-                                else {
-                                    previousPaddingTop = parseInt(paddings[0]);
-                                    previousPaddingBottom = parseInt(paddings[2]);
-                                }
-                            }
-
-                            if (possiblePadding.prop == 'padding-top') {
-                                previousPaddingTop = parseInt(possiblePadding.value);
-                            }
-
-                            if (possiblePadding.prop == 'padding-bottom') {
-                                previousPaddingBottom = parseInt(possiblePadding.value);
-                            }
-                        });
-
                         if (paddingTopCorrection < previousPaddingTop) {
                             paddingTopCorrection = ceilToNumber(documentRowSize, previousPaddingTop) + paddingTopCorrection;
                         }
@@ -82,8 +112,21 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                         }
                     }
 
-                    rule.insertAfter(declaration, postcss.parse('padding-top: ' + paddingTopCorrection));
-                    rule.insertAfter(declaration, postcss.parse('padding-bottom: ' + paddingBottomCorrection));
+                    if (paddingTopCorrection) {
+                        rule.insertAfter(declaration, postcss.parse('padding-top: ' + paddingTopCorrection + 'px'));
+                    }
+
+                    if (paddingBottomCorrection) {
+                        rule.insertAfter(declaration, postcss.parse('padding-bottom: ' + paddingBottomCorrection + 'px'));
+                    }
+
+                    if (paddingLeft) {
+                        rule.insertAfter(declaration, postcss.parse('padding-left: ' + paddingLeft));
+                    }
+
+                    if (paddingRight) {
+                        rule.insertAfter(declaration, postcss.parse('padding-right: ' + paddingRight));
+                    }
 
                     declaration.remove();
                 }

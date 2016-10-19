@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Abhaya+Libre');
 
 body {
-    padding: 12px 2px 3px 4px;
+    padding-top: 2rs;
     font-preset: paragraphs;
+    height: 3rs;
 }

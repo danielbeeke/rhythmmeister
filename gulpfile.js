@@ -1,11 +1,13 @@
 var gulp = require('gulp');
 var postcss = require('gulp-postcss');
+var longhand = require('postcss-merge-longhand');
 var rhythmmeister = require('./rhythmmeister');
 var fontPresets = require('./font-presets');
 
 gulp.task('css', function () {
     var processors = [
-        rhythmmeister(fontPresets)
+        rhythmmeister(fontPresets),
+        longhand
     ];
     return gulp.src('./src/*.css')
     .pipe(postcss(processors))
