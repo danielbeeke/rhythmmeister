@@ -1,5 +1,6 @@
 var postcss = require('postcss');
 var DataURI = require('datauri');
+
 module.exports = postcss.plugin('rhythmmeister', function (options) {
 
     options = options || {};
@@ -222,7 +223,7 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
 
             var svg = svgStart + svgMiddle + svgEnd;
 
-            var datauri = new Datauri();
+            var datauri = new DataURI();
             datauri.format('.svg', svg);
 
             declaration.remove();
