@@ -1,5 +1,5 @@
 var postcss = require('postcss');
-
+var DataURI = require('datauri');
 module.exports = postcss.plugin('rhythmmeister', function (options) {
 
     options = options || {};
@@ -42,10 +42,10 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
     };
 
     var applyFontProperties = function (rule, declaration, fontPreset) {
-        var propertiesToSet = ['font-family', 'font-size', 'font-weight', 'font-style', 'letter-spacing'];
+        var propertiesToSkip = ['rows', 'base-line-percentage'];
 
-        propertiesToSet.forEach((property) => {
-            if (fontPreset[property]) {
+        Object.keys(fontPreset).forEach((property) => {
+            if (propertiesToSkip.indexOf(property) === -1) {
                 rule.insertAfter(declaration, postcss.parse(property + ': ' + fontPreset[property]));
             }
         });
@@ -188,10 +188,54 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
         }
     };
 
+    var applyGridHelper = function (rule, declaration, localDocumentRowSize) {
+        if (declaration.prop == 'vertical-rhythm-grid') {
+            var properties = declaration.value.split(' ');
+
+            var firstRowOddColor = properties[0];
+            var firstRowEvenColor = properties[1];
+
+            var otherRowOddColor = properties[2];
+            var otherRowEvenColor = properties[3];
+
+            var horizontalWidth = properties[4];
+            var alternation = properties[5];
+
+            var oneLineWidth = parseInt(horizontalWidth);
+            var svgWidth = oneLineWidth * 2;
+            var svgHeight = alternation * localDocumentRowSize;
+
+
+            var svgStart = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' + svgWidth  + '" height="' + svgHeight + '" viewBox="0 0 ' + svgWidth  + ' ' + svgHeight + '">';
+
+            var svgMiddle = '';
+
+            for (i = 0; i < alternation; i++) {
+                var rowOddColor = i == 0 ? firstRowOddColor : otherRowOddColor;
+                var rowEvenColor = i == 0 ? firstRowEvenColor : otherRowEvenColor;
+                var y = i * localDocumentRowSize;
+
+                svgMiddle += '<rect width="' + oneLineWidth + '" height="1" x="0" y="' + y + '" fill="' + rowOddColor + '"/><rect width="' + oneLineWidth + '" height="1" x="' + oneLineWidth + '" y="' + y + '" fill="' + rowEvenColor + '"/>';
+            }
+
+            var svgEnd = '</svg>';
+
+            var svg = svgStart + svgMiddle + svgEnd;
+
+            var datauri = new Datauri();
+            datauri.format('.svg', svg);
+
+            declaration.remove();
+
+            rule.insertAfter(declaration, postcss.parse('background-image:  url("' + datauri.content + '")'));
+        }
+    }
+
     return function (css) {
         css.walkRules(function (rule) {
             rule.walkDecls(function (declaration, i) {
                 applyRs(declaration, documentRowSize);
+                applyGridHelper(rule, declaration, documentRowSize);
 
                 if (declaration.prop == 'font-preset' && getFontPreset(options, declaration.value)) {
                     var fontPreset = getFontPreset(options, declaration.value);
@@ -203,7 +247,7 @@ module.exports = postcss.plugin('rhythmmeister', function (options) {
                     paddingTopCorrection = subtractBorderTop(rule, paddingTopCorrection, documentRowSize);
                     paddingBottomCorrection = subtractBorderBottom(rule, paddingBottomCorrection, documentRowSize);
 
-                    fixPadding(rule, declaration, paddingTopCorrection, paddingBottomCorrection);
+                    fixPadding(rule, declaration, Math.round(paddingTopCorrection), Math.round(paddingBottomCorrection));
 
                     declaration.remove();
                 }

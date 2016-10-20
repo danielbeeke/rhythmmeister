@@ -2,6 +2,8 @@
   "name": "rhythmmeister",
   "version": "1.0.0",
   "dependencies": {
+    "ava": "^0.16.0",
+    "datauri": "^1.0.4",
     "gulp": "^3.9.1",
     "gulp-postcss": "^6.2.0",
     "postcss-merge-longhand": "^2.0.1"
