@@ -15,6 +15,7 @@ gulp.task('serve', ['css', 'test'], () => {
 
     gulp.watch(['./src/*.css'], ['css', 'test']);
     gulp.watch(['./test/*.js'], ['test']);
+    gulp.watch(['./font-presets.json'], ['css', 'test']);
 });
 
 gulp.task('css', () => {
