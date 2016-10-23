@@ -12,7 +12,9 @@ gulp.task('serve', ['css', 'test'], () => {
 
     gulp.watch('./src/*.html').on('change', browserSync.reload);
     gulp.watch('./src/*.js').on('change', browserSync.reload);
+
     gulp.watch(['./src/*.css'], ['css', 'test']);
+    gulp.watch(['./test/*.js'], ['test']);
 });
 
 gulp.task('css', () => {
