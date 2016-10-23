@@ -1,6 +1,30 @@
-@import url('https://fonts.googleapis.com/css?family=Abhaya+Libre');
+.page-header {
+    font-preset: page-header;
+}
 
-body {
-    border-top: 1px solid red;
+.header-bold {
+    font-preset: header-bold;
+    color: blue;
+}
+
+.header-light {
+    font-preset: header-light;
+    color: blue;
+}
+
+.introduction {
+    font-preset: introduction;
+}
+
+.medium {
+    font-preset: medium;
+    color: blue;
+}
+
+.paragraphs {
     font-preset: paragraphs;
+}
+
+.small {
+    font-preset: small;
 }

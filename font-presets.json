@@ -1,12 +1,64 @@
 {
-  "document-row-size": "12px",
+  "document-row-size": "8px",
   "presets": {
-    "paragraphs": {
-      "font-family": "'Abhaya Libre', serif",
+    "small": {
       "rows": 3,
-      "font-weight": 300,
+      "base-line-percentage": 0.87,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 400,
+      "font-size": "14px",
+      "font-style": "normal"
+    },
+    "paragraphs": {
+      "rows": 3,
+      "base-line-percentage": 0.87,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 400,
       "font-size": "16px",
-      "base-line-percentage": 0.88
+      "font-style": "normal",
+      "color": "$blue"
+    },
+    "medium": {
+      "rows": 3,
+      "base-line-percentage": 0.87,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 400,
+      "font-size": "18px",
+      "font-style": "normal"
+    },
+    "introduction": {
+      "rows": 4,
+      "base-line-percentage": 0.875,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 400,
+      "font-size": "22px",
+      "font-style": "normal"
+    },
+    "header-light": {
+      "rows": 5,
+      "base-line-percentage": 0.875,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 300,
+      "font-size": "32px",
+      "font-style": "normal"
+    },
+    "header-bold": {
+      "rows": 5,
+      "base-line-percentage": 0.865,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 700,
+      "font-size": "32px",
+      "font-style": "normal"
+    },
+    "page-header": {
+      "rows": 7,
+      "base-line-percentage": 0.87,
+      "font-family": "'Open Sans', serif",
+      "font-weight": 900,
+      "font-size": "42px",
+      "font-style": "normal",
+      "text-shadow": "0 0 15px rgba(0, 0, 0, .5)",
+      "color": "white"
     }
   }
 }
