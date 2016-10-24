@@ -9,7 +9,7 @@
 
 .header-light {
     font-preset: header-light;
-    color: blue;
+    color: green;
 }
 
 .introduction {
@@ -18,7 +18,7 @@
 
 .medium {
     font-preset: medium;
-    color: blue;
+    color: red;
 }
 
 .paragraphs {

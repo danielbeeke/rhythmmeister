@@ -2,6 +2,20 @@ import test from 'ava';
 import fontPresets from '../font-presets';
 import unit from 'parse-unit';
 
+test('config must have a document-row-size.', t => {
+    if (fontPresets['document-row-size']) {
+        var parsedUnit = unit(fontPresets['document-row-size']);
+
+        if (isNaN(parseInt(parsedUnit[0]))) {
+            t.fail();
+        }
+
+        if (parseInt(parsedUnit[0]) > 0) {
+            t.pass();
+        }
+    }
+});
+
 test('config must have a document-row-size set in pixels.', t => {
     if (fontPresets['document-row-size']) {
         var parsedUnit = unit(fontPresets['document-row-size']);

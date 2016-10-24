@@ -1,7 +1,7 @@
 const rhythmmeister = require('./index');
+const functions = require('./functions');
 const gulp = require('gulp');
 const postcss = require('gulp-postcss');
-const fontPresets = require('./font-presets');
 const browserSync = require('browser-sync').create();
 const ava = require('gulp-ava');
 
@@ -19,6 +19,9 @@ gulp.task('serve', ['css', 'test'], () => {
 });
 
 gulp.task('css', () => {
+    functions.purgeCache('./font-presets');
+    var fontPresets = require('./font-presets');
+
     var processors = [
         rhythmmeister(fontPresets)
     ];

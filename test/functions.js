@@ -1,6 +1,7 @@
 import test from 'ava';
 import functions from '../functions';
 import fontPresets from '../font-presets';
+import postcss from 'postcss';
 
 test('getFontPreset should return a preset by name.', t => {
     var preset = functions.getFontPreset(fontPresets, 'paragraphs');
@@ -44,4 +45,8 @@ test('getPixelValueFromCssProperty should throw when getting multiple pixel valu
     t.throws(function () {
         return functions.getPixelValueFromCssProperty('10px 3px');
     }, 'This function does not know how to deal with multiple pixel values in a css property value.');
+});
+
+test('applyRs should replace rs with the selected row size.', t => {
+
 });
