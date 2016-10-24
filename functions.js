@@ -14,12 +14,15 @@ var functions = {
         return Math.ceil(valueToCeil / ceilTo) * ceilTo;
     },
 
-    getBorderWidth: function (properties) {
+    getPixelValueFromCssProperty: function (properties) {
         var width = false;
         var propertiesSplit = properties.split(' ');
 
         propertiesSplit.forEach((property) => {
             if (parseInt(property)) {
+                if (width) {
+                    throw new Error('This function does not know how to deal with multiple pixel values in a css property value.');
+                }
                 width = parseInt(property);
             }
         });
@@ -61,52 +64,36 @@ var functions = {
         return topCorrection;
     },
 
-    subtractBorderTop: function (rule, paddingTopCorrection, localDocumentRowSize) {
+    subtractBorder: function (rule, paddingCorrection, localDocumentRowSize, type) {
         rule.walkDecls(function (possibleBorder) {
             if (possibleBorder.prop == 'border') {
-                var allBorderWidth = functions.getBorderWidth(possibleBorder.value);
+                var allBorderWidth = functions.getPixelValueFromCssProperty(possibleBorder.value);
                 if (allBorderWidth) {
-                    paddingTopCorrection = paddingTopCorrection - allBorderWidth;
+                    paddingCorrection = paddingCorrection - allBorderWidth;
                 }
             }
 
-            if (possibleBorder.prop == 'border-top') {
-                var borderTopWidth = functions.getBorderWidth(possibleBorder.value);
+            if (possibleBorder.prop == 'border-' + type) {
+                var borderTopWidth = functions.getPixelValueFromCssProperty(possibleBorder.value);
                 if (borderTopWidth) {
-                    paddingTopCorrection = paddingTopCorrection - borderTopWidth;
+                    paddingCorrection = paddingCorrection - borderTopWidth;
                 }
             }
         });
 
-        if (paddingTopCorrection < 0) {
-            paddingTopCorrection = paddingTopCorrection + localDocumentRowSize;
+        if (paddingCorrection < 0) {
+            paddingCorrection = paddingCorrection + localDocumentRowSize;
         }
 
-        return paddingTopCorrection;
+        return paddingCorrection;
+    },
+
+    subtractBorderTop: function (rule, paddingTopCorrection, localDocumentRowSize) {
+        return functions.subtractBorder(rule, paddingTopCorrection, localDocumentRowSize, 'top');
     },
 
     subtractBorderBottom: function (rule, paddingBottomCorrection, localDocumentRowSize) {
-        rule.walkDecls(function (possibleBorder) {
-            if (possibleBorder.prop == 'border') {
-                var allBorderWidth = functions.getBorderWidth(possibleBorder.value);
-                if (allBorderWidth) {
-                    paddingBottomCorrection = paddingBottomCorrection - allBorderWidth;
-                }
-            }
-
-            if (possibleBorder.prop == 'border-bottom') {
-                var borderBottomWidth = functions.getBorderWidth(possibleBorder.value);
-                if (borderBottomWidth) {
-                    paddingBottomCorrection = paddingBottomCorrection - borderBottomWidth;
-                }
-            }
-        });
-
-        if (paddingBottomCorrection < 0) {
-            paddingBottomCorrection = paddingBottomCorrection + localDocumentRowSize;
-        }
-
-        return paddingBottomCorrection;
+        return functions.subtractBorder(rule, paddingBottomCorrection, localDocumentRowSize, 'bottom');
     },
 
     fixPadding: function (rule, declaration, paddingTopCorrection, paddingBottomCorrection) {

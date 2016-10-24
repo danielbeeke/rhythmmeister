@@ -34,3 +34,14 @@ test('ceilToNumber should ceil a number to another number.', t => {
         t.is(functions.ceilToNumber(item[0], item[1]), item[2]);
     })
 });
+
+test('getPixelValueFromCssProperty should get the pixel value from a border', t => {
+    var parsed = functions.getPixelValueFromCssProperty('3px solid red');
+    t.is(parsed, 3);
+});
+
+test('getPixelValueFromCssProperty should throw when getting multiple pixel values', t => {
+    t.throws(function () {
+        return functions.getPixelValueFromCssProperty('10px 3px');
+    }, 'This function does not know how to deal with multiple pixel values in a css property value.');
+});
