@@ -83,24 +83,52 @@ test('applyRs should replace rs with the selected row size inside calc.', t => {
 
 test('applyFontProperties should append font properties.', t => {
     var parsed = postcss.parse(`div { 
+        padding-top: 20px;
         font-preset: paragraphs; 
         color: red;
     }`);
-    var rule = parsed.first;
 
-    var declaration = rule.first;
+    var rule = parsed.first;
+    var declaration = rule.first.next();
     var fontPreset = functions.getFontPreset(fontPresets, declaration.value);
 
     functions.applyFontProperties(rule, declaration, fontPreset, 10);
     declaration.remove();
 
     t.is(rule.toString(), `div { 
-        line-height: 30px; 
-        color: blue; 
-        font-style: normal; 
-        font-size: 16px; 
-        font-weight: 400; 
+        padding-top: 20px;
+        line-height: 30px;
+        color: blue;
+        font-style: normal;
+        font-size: 16px;
+        font-weight: 400;
         font-family: 'Open Sans', serif; 
         color: red;
     }`);
+});
+
+test('calculateTopCorrection should get a float value to put at the padding-top', t => {
+    var fontPreset = functions.getFontPreset(fontPresets, 'paragraphs');
+    var paddingTopCorrection = functions.calculateTopCorrection(fontPreset, 10);
+    t.is(paddingTopCorrection, 9.079999999999998);
+});
+
+test('subtractBorderTop should remove the border-top from the padding-top', t => {
+    var oldPaddingTop = 13;
+    var localRowsSize = 10;
+
+    var parsed = postcss.parse(`div { 
+        border-top: 2px solid red;
+        font-preset: paragraphs; 
+        color: red;
+    }`);
+
+    var rule = parsed.first;
+    var declaration = rule.first.next();
+    var fontPreset = functions.getFontPreset(fontPresets, declaration.value);
+
+    functions.applyFontProperties(rule, declaration, fontPreset, localRowsSize);
+    var newPaddingTop = functions.subtractBorderTop(rule, oldPaddingTop, localRowsSize);
+
+    t.is(newPaddingTop, 11);
 });
