@@ -69,3 +69,38 @@ test('applyRs should replace rs with the selected row size for padding.', t => {
     functions.applyRs(declaration, 10);
     t.is(declaration.value, '1px 20px 3px 40px');
 });
+
+test('applyRs should replace rs with the selected row size inside calc.', t => {
+    var rule = postcss.parse(`div {
+        padding: calc(2rs * 4rs);
+    }`);
+
+    var declaration = rule.first.first;
+
+    functions.applyRs(declaration, 5);
+    t.is(declaration.value, 'calc(10px * 20px)');
+});
+
+test('applyFontProperties should append font properties.', t => {
+    var parsed = postcss.parse(`div { 
+        font-preset: paragraphs; 
+        color: red;
+    }`);
+    var rule = parsed.first;
+
+    var declaration = rule.first;
+    var fontPreset = functions.getFontPreset(fontPresets, declaration.value);
+
+    functions.applyFontProperties(rule, declaration, fontPreset, 10);
+    declaration.remove();
+
+    t.is(rule.toString(), `div { 
+        line-height: 30px; 
+        color: blue; 
+        font-style: normal; 
+        font-size: 16px; 
+        font-weight: 400; 
+        font-family: 'Open Sans', serif; 
+        color: red;
+    }`);
+});
