@@ -47,6 +47,25 @@ test('getPixelValueFromCssProperty should throw when getting multiple pixel valu
     }, 'This function does not know how to deal with multiple pixel values in a css property value.');
 });
 
-test('applyRs should replace rs with the selected row size.', t => {
+test('applyRs should replace rs with the selected row size for height.', t => {
+    var rule = postcss.parse(`div {
+        height: 4rs;
+    }`);
 
+    var declaration = rule.first.first;
+
+    functions.applyRs(declaration, 10);
+    t.is(declaration.value, '40px');
+});
+
+
+test('applyRs should replace rs with the selected row size for padding.', t => {
+    var rule = postcss.parse(`div {
+        padding: 1px 2rs 3px 4rs;
+    }`);
+
+    var declaration = rule.first.first;
+
+    functions.applyRs(declaration, 10);
+    t.is(declaration.value, '1px 20px 3px 40px');
 });

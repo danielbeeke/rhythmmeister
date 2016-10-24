@@ -6,13 +6,13 @@ const ava = require('gulp-ava');
 
 gulp.task('serve', ['css', 'test'], () => {
     browserSync.init({
-        server: ['./dest', './src']
+        server: ['./dest', './test-site']
     });
 
-    gulp.watch('./src/*.html').on('change', browserSync.reload);
-    gulp.watch('./src/*.js').on('change', browserSync.reload);
+    gulp.watch('./test-site/*.html').on('change', browserSync.reload);
+    gulp.watch('./test-site/*.js').on('change', browserSync.reload);
 
-    gulp.watch(['./src/*.css'], ['css', 'test']);
+    gulp.watch(['./test-site/*.css'], ['css', 'test']);
     gulp.watch(['./test/*.js'], ['test']);
     gulp.watch(['./font-presets.json'], ['css', 'test']);
 });
@@ -24,7 +24,7 @@ gulp.task('css', () => {
         rhythmmeister.processor(fontPresets)
     ];
 
-    return gulp.src('./src/*.css')
+    return gulp.src('./test-site/*.css')
     .pipe(postcss(processors))
     .pipe(gulp.dest('./dest'))
     .pipe(browserSync.stream());
