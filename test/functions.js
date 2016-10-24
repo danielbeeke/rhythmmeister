@@ -132,3 +132,23 @@ test('subtractBorderTop should remove the border-top from the padding-top', t =>
 
     t.is(newPaddingTop, 11);
 });
+
+test('subtractBorderTop should remove the border from the padding-top', t => {
+    var oldPaddingTop = 13;
+    var localRowsSize = 10;
+
+    var parsed = postcss.parse(`div { 
+        border: 2px solid red;
+        font-preset: paragraphs; 
+        color: red;
+    }`);
+
+    var rule = parsed.first;
+    var declaration = rule.first.next();
+    var fontPreset = functions.getFontPreset(fontPresets, declaration.value);
+
+    functions.applyFontProperties(rule, declaration, fontPreset, localRowsSize);
+    var newPaddingTop = functions.subtractBorderTop(rule, oldPaddingTop, localRowsSize);
+
+    t.is(newPaddingTop, 11);
+});
