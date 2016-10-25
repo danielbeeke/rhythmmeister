@@ -1,5 +1,13 @@
 .page-header {
+    /*padding-top: .5rs;*/
+    /*padding-bottom: .5rs;*/
     font-preset: page-header;
+}
+
+.page-header {
+    font-preset: page-header;
+    /*padding-top: .5rs;*/
+    /*padding-bottom: .5rs;*/
 }
 
 .header-bold {

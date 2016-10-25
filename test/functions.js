@@ -133,8 +133,8 @@ test('subtractBorderTop should remove the border-top from the padding-top', t =>
     t.is(newPaddingTop, 11);
 });
 
-test('subtractBorderTop should remove the border from the padding-top', t => {
-    var oldPaddingTop = 13;
+test('subtractBorderBottom should remove the border from the padding-bottom', t => {
+    var oldPaddingBottom = 13;
     var localRowsSize = 10;
 
     var parsed = postcss.parse(`div { 
@@ -148,7 +148,7 @@ test('subtractBorderTop should remove the border from the padding-top', t => {
     var fontPreset = functions.getFontPreset(fontPresets, declaration.value);
 
     functions.applyFontProperties(rule, declaration, fontPreset, localRowsSize);
-    var newPaddingTop = functions.subtractBorderTop(rule, oldPaddingTop, localRowsSize);
+    var newPaddingBottom = functions.subtractBorderBottom(rule, oldPaddingBottom, localRowsSize);
 
-    t.is(newPaddingTop, 11);
+    t.is(newPaddingBottom, 11);
 });

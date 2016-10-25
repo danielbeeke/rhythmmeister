@@ -146,13 +146,8 @@ var functions = {
             }
         });
 
-        if (paddingTopCorrection < previousPaddingTop) {
-            paddingTopCorrection = functions.ceilToNumber(documentRowSize, previousPaddingTop) + paddingTopCorrection;
-        }
-
-        if (paddingBottomCorrection < previousPaddingBottom) {
-            paddingBottomCorrection = functions.ceilToNumber(documentRowSize, previousPaddingBottom) + paddingBottomCorrection;
-        }
+        paddingTopCorrection = previousPaddingTop + paddingTopCorrection;
+        paddingBottomCorrection = previousPaddingBottom + paddingBottomCorrection;
 
         if (paddingTopCorrection) {
             rule.insertAfter(declaration, postcss.parse('padding-top: ' + paddingTopCorrection + 'px'));

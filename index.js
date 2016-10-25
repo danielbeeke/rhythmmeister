@@ -12,7 +12,11 @@ module.exports = {
                 rule.walkDecls(function (declaration, i) {
                     functions.applyRs(declaration, documentRowSize);
                     functions.applyGridHelper(rule, declaration, documentRowSize);
+                });
+            });
 
+            css.walkRules(function (rule) {
+                rule.walkDecls(function (declaration, i) {
                     if (declaration.prop == 'font-preset' && functions.getFontPreset(options, declaration.value)) {
                         var fontPreset = functions.getFontPreset(options, declaration.value);
                         functions.applyFontProperties(rule, declaration, fontPreset, documentRowSize);
@@ -27,8 +31,8 @@ module.exports = {
 
                         declaration.remove();
                     }
-                });
-            });
+                })
+            })
         }
     }),
 
