@@ -1,24 +1,29 @@
 .page-header {
     font-preset: page-header;
+    margin-bottom: 3rs;
 }
 
 .header-bold {
     font-preset: header-bold;
+    margin-bottom: 4rs;
     color: blue;
 }
 
 .header-light {
     font-preset: header-light;
     color: green;
+    margin-bottom: 4rs;
 }
 
 .introduction {
     font-preset: introduction;
+    margin-bottom: 4rs;
 }
 
 .medium {
     font-preset: medium;
     color: red;
+    margin-bottom: 2rs;
 }
 
 .paragraphs {
@@ -27,12 +32,14 @@
 
 .small {
     font-preset: small;
+    margin-bottom: 2rs;
 }
 
 .button {
     padding: 1rs 2rs 1.8rs 2rs;
     margin-top: 1rs;
     margin-bottom: .2rs;
+    margin-right: 2rs;
     background-color: red;
     border-radius: 4px;
     display: inline-block;
