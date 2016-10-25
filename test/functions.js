@@ -165,3 +165,27 @@ test('applyGridHelper only a regression test', t => {
     t.is(rule.toString(), `div {
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjIiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAyIDQwIj48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4PSIwIiB5PSIwIiBmaWxsPSIjMDAwMDAwIi8+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgeD0iMSIgeT0iMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHg9IjAiIHk9IjEwIiBmaWxsPSIjYmJiIi8+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgeD0iMSIgeT0iMTAiIGZpbGw9IiNmZmZmZmYiLz48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4PSIwIiB5PSIyMCIgZmlsbD0iI2JiYiIvPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHg9IjEiIHk9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgeD0iMCIgeT0iMzAiIGZpbGw9IiNiYmIiLz48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4PSIxIiB5PSIzMCIgZmlsbD0iI2ZmZmZmZiIvPjwvc3ZnPg=="); }`);
 });
+
+test('paddingOrMarginToLongHand one value', t => {
+    var longHand = functions.paddingOrMarginToLongHand('10px');
+
+    t.deepEqual(longHand, { top: '10px', right: '10px', bottom: '10px', left: '10px' });
+});
+
+test('paddingOrMarginToLongHand two values', t => {
+    var longHand = functions.paddingOrMarginToLongHand('1px 2px');
+
+    t.deepEqual(longHand, { top: '1px', right: '2px', bottom: '1px', left: '2px' });
+});
+
+test('paddingOrMarginToLongHand three values', t => {
+    var longHand = functions.paddingOrMarginToLongHand('1px 2px 3px');
+
+    t.deepEqual(longHand, { top: '1px', right: '2px', bottom: '3px', left: '2px' });
+});
+
+test('paddingOrMarginToLongHand four values', t => {
+    var longHand = functions.paddingOrMarginToLongHand('1px 2px 3px 4px');
+
+    t.deepEqual(longHand, { top: '1px', right: '2px', bottom: '3px', left: '4px' });
+});

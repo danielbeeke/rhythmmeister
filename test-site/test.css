@@ -1,13 +1,5 @@
 .page-header {
-    /*padding-top: .5rs;*/
-    /*padding-bottom: .5rs;*/
     font-preset: page-header;
-}
-
-.page-header {
-    font-preset: page-header;
-    /*padding-top: .5rs;*/
-    /*padding-bottom: .5rs;*/
 }
 
 .header-bold {
@@ -35,4 +27,17 @@
 
 .small {
     font-preset: small;
+}
+
+.button {
+    padding: 1rs 2rs 1.8rs 2rs;
+    margin-top: 1rs;
+    margin-bottom: .2rs;
+    background-color: red;
+    border-radius: 4px;
+    display: inline-block;
+    text-decoration: none;
+    font-preset: small;
+    text-transform: uppercase;
+    color: white;
 }

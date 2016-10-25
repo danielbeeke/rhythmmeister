@@ -96,58 +96,73 @@ var functions = {
         return functions.subtractBorder(rule, paddingBottomCorrection, localDocumentRowSize, 'bottom');
     },
 
+    paddingOrMarginToLongHand: function (value) {
+        var valueSplit = value.split(' ');
+
+        if (valueSplit.length == 1) {
+            return {
+                top: value,
+                right: value,
+                bottom: value,
+                left: value
+            }
+        }
+
+        if (valueSplit.length == 2) {
+            return {
+                top: valueSplit[0],
+                right: valueSplit[1],
+                bottom: valueSplit[0],
+                left: valueSplit[1]
+            }
+        }
+
+        if (valueSplit.length == 3) {
+            return {
+                top: valueSplit[0],
+                right: valueSplit[1],
+                bottom: valueSplit[2],
+                left: valueSplit[1]
+            }
+        }
+
+        if (valueSplit.length == 4) {
+            return {
+                top: valueSplit[0],
+                right: valueSplit[1],
+                bottom: valueSplit[2],
+                left: valueSplit[3]
+            }
+        }
+    },
+
     fixPadding: function (rule, declaration, paddingTopCorrection, paddingBottomCorrection) {
-        var previousPaddingTop = 0;
-        var previousPaddingBottom = 0;
-        var paddingLeft = 0;
-        var paddingRight = 0;
+        var paddingLongHand = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+        };
 
         rule.walkDecls(function (possiblePadding) {
             if (possiblePadding.prop == 'padding') {
-
-                var paddings = possiblePadding.value.split(' ');
-                if (paddings.length < 3) {
-                    previousPaddingTop = parseInt(paddings[0]);
-                    previousPaddingBottom = parseInt(paddings[0]);
-                }
-
-                else {
-                    previousPaddingTop = parseInt(paddings[0]);
-                    previousPaddingBottom = parseInt(paddings[2]);
-                }
-
-                if (paddings.length == 1) {
-                    paddingLeft = paddings[0];
-                    paddingRight = paddings[0];
-                }
-
-                else if (paddings.length > 1) {
-                    paddingLeft = paddings[1];
-                }
-
-                else if (paddings.length > 3) {
-                    paddingRight = paddings[3];
-                }
-                else {
-                    paddingRight = paddings[1];
-                }
-
+                paddingLongHand = functions.paddingOrMarginToLongHand(possiblePadding.value);
                 possiblePadding.remove();
             }
 
             if (possiblePadding.prop == 'padding-top') {
-                previousPaddingTop = parseInt(possiblePadding.value);
+                paddingLongHand.top = parseInt(possiblePadding.value);
                 possiblePadding.remove();
             }
 
             if (possiblePadding.prop == 'padding-bottom') {
-                previousPaddingBottom = parseInt(possiblePadding.value);
+                paddingLongHand.bottom = parseInt(possiblePadding.value);
                 possiblePadding.remove();
             }
         });
 
-        paddingTopCorrection = previousPaddingTop + paddingTopCorrection;
-        paddingBottomCorrection = previousPaddingBottom + paddingBottomCorrection;
+        paddingTopCorrection = parseInt(paddingLongHand.top) + paddingTopCorrection;
+        paddingBottomCorrection = parseInt(paddingLongHand.bottom) + paddingBottomCorrection;
 
         if (paddingTopCorrection) {
             rule.insertAfter(declaration, postcss.parse('padding-top: ' + paddingTopCorrection + 'px'));
@@ -157,12 +172,12 @@ var functions = {
             rule.insertAfter(declaration, postcss.parse('padding-bottom: ' + paddingBottomCorrection + 'px'));
         }
 
-        if (paddingLeft) {
-            rule.insertAfter(declaration, postcss.parse('padding-left: ' + paddingLeft));
+        if (paddingLongHand.left) {
+            rule.insertAfter(declaration, postcss.parse('padding-left: ' + paddingLongHand.left));
         }
 
-        if (paddingRight) {
-            rule.insertAfter(declaration, postcss.parse('padding-right: ' + paddingRight));
+        if (paddingLongHand.right) {
+            rule.insertAfter(declaration, postcss.parse('padding-right: ' + paddingLongHand.right));
         }
     },
 
