@@ -152,3 +152,16 @@ test('subtractBorderBottom should remove the border from the padding-bottom', t 
 
     t.is(newPaddingBottom, 11);
 });
+
+test('applyGridHelper only a regression test', t => {
+    var parsed = postcss.parse(`div { vertical-rhythm-grid: #000000 #ffffff #bbb #ffffff 1px 4; }`);
+
+    var rule = parsed.first;
+    var declaration = rule.first;
+    var localRowsSize = 10;
+
+    functions.applyGridHelper(rule, declaration, localRowsSize);
+
+    t.is(rule.toString(), `div {
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgd2lkdGg9IjIiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCAyIDQwIj48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4PSIwIiB5PSIwIiBmaWxsPSIjMDAwMDAwIi8+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgeD0iMSIgeT0iMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHg9IjAiIHk9IjEwIiBmaWxsPSIjYmJiIi8+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgeD0iMSIgeT0iMTAiIGZpbGw9IiNmZmZmZmYiLz48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4PSIwIiB5PSIyMCIgZmlsbD0iI2JiYiIvPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIHg9IjEiIHk9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgeD0iMCIgeT0iMzAiIGZpbGw9IiNiYmIiLz48cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4PSIxIiB5PSIzMCIgZmlsbD0iI2ZmZmZmZiIvPjwvc3ZnPg=="); }`);
+});
