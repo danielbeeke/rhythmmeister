@@ -189,3 +189,24 @@ test('paddingOrMarginToLongHand four values', t => {
 
     t.deepEqual(longHand, { top: '1px', right: '2px', bottom: '3px', left: '4px' });
 });
+
+test('fixPadding bottom and top', t => {
+    var parsed = postcss.parse(`div { 
+        border: 2px solid red;
+        font-preset: paragraphs; 
+        color: red;
+    }`);
+
+    var rule = parsed.first;
+    var declaration = rule.first.next();
+
+    functions.fixPadding (rule, declaration, 3, 4);
+
+    t.is(rule.toString(), `div { 
+        border: 2px solid red;
+        font-preset: paragraphs;
+        padding-bottom: 4px;
+        padding-top: 3px; 
+        color: red;
+    }`);
+});
