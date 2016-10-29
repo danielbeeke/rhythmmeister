@@ -239,6 +239,7 @@ var functions = {
             }
         });
     },
+    
     searchCache: function (moduleName, callback) {
         // Resolve the module identified by the specified name
         var mod = require.resolve(moduleName);

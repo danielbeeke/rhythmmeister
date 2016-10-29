@@ -3,10 +3,15 @@
 This helps creating a vertical grid for texts on the almighty interwebs.
 Check out http://rhythmmeister.com/ for a visible explanation.
 
-How to use?
+### Install
+```
+npm install rhythmmeister --save
+```
+
+### How to use?
 
 Add the plugin to grunt or gulp like you normally would with a postcss plugin.
-Give a settings like the following to it:
+Give a settings JSON file like the following to it:
 
 ```
 {
@@ -23,10 +28,10 @@ Give a settings like the following to it:
 }
 ```
 
-You can use font-preset: paragraphs;
+Now you can use font-preset: paragraphs; in your css.
 This will set the line height, all the font properties and fix the top padding so the text is put on the vertical grid.
 
-If you can add a border to the text it is subtracted from the padding top.
+If you add a border to the text it is subtracted from the padding top.
 Also if after the subtraction the padding is negative it is fixed.
 
 Now you can use the unit __rs__. This is row size * given value. 
@@ -41,11 +46,5 @@ body {
 }
 ```
 
-### TODO
-
-* Write tests
-* Make long hand border notation work
-* Clean up repo
-* Register postcss plugin
-* Use in a project
-* Use on http://rhythmmeister.com/
+### Tests
+RhythmMeister is tested with [ava](https://github.com/avajs/ava).
