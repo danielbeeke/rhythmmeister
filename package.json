@@ -2,8 +2,11 @@
   "name": "rhythmmeister",
   "version": "1.0.0",
   "license": "GPL-3.0",
+  "main": "index.js",
+  "author": "Daniel Beeke",
   "dependencies": {
-    "datauri": "^1.0.4"
+    "datauri": "^1.0.4",
+    "parse-unit": "^1.0.1"
   },
   "devDependencies": {
     "ava": "^0.16.0",
@@ -11,7 +14,15 @@
     "gulp": "^3.9.1",
     "gulp-ava": "^0.14.1",
     "gulp-postcss": "^6.2.0",
-    "parse-unit": "^1.0.1",
     "postcss-merge-longhand": "^2.0.1"
-  }
+  },
+  "keywords": ["postcss", "vertical rhythm", "rhythmmeister"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielbeeke/rhythmmeister.git"
+  },
+  "bugs": {
+    "url": "https://github.com/danielbeeke/rhythmmeister/issues"
+  },
+  "homepage": "http://rhythmmeister.com"
 }
