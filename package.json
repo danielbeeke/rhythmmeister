@@ -14,9 +14,14 @@
     "gulp": "^3.9.1",
     "gulp-ava": "^0.14.1",
     "gulp-postcss": "^6.2.0",
+    "jspm": "^0.16.48",
     "postcss-merge-longhand": "^2.0.1"
   },
-  "keywords": ["postcss", "vertical rhythm", "rhythmmeister"],
+  "keywords": [
+    "postcss",
+    "vertical rhythm",
+    "rhythmmeister"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/danielbeeke/rhythmmeister.git"
@@ -24,5 +29,13 @@
   "bugs": {
     "url": "https://github.com/danielbeeke/rhythmmeister/issues"
   },
-  "homepage": "http://rhythmmeister.com"
+  "homepage": "http://rhythmmeister.com",
+  "jspm": {
+    "dependencies": {},
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  }
 }

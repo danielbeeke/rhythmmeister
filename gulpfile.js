@@ -6,7 +6,7 @@ const ava = require('gulp-ava');
 
 gulp.task('serve', ['css', 'test'], () => {
     browserSync.init({
-        server: ['./dest', './test-site']
+        server: ['./dest', './test-site', './jspm_packages']
     });
 
     gulp.watch('./test-site/*.html').on('change', browserSync.reload);
