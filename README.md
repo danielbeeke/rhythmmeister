@@ -1,16 +1,39 @@
-# RhythmMeister PostCSS
+# RhythmMeister
 
 This helps creating a vertical grid for texts on the almighty interwebs.
-Check out http://rhythmmeister.com/ for a visible explanation.
+Check out http://rhythmmeister.com/ for a visible explanation and live preview.
 
 ### Install
 ```
 npm install rhythmmeister --save
 ```
 
+####gulpfile.js
+```
+var rhythmmeister = require('rhythmmeister');
+
+gulp.task('postcss', function() {
+  // This enables reloading the presets json without caching.
+  var fontPresets = rhythmmeister.load(path.resolve('./font-presets'));
+
+  var processors = [
+        rhythmmeister.processor(fontPresets)
+    ];
+
+    gulp.src('css/**/*.css')
+        .pipe(postcss(processors))
+        .pipe(gulp.dest('css'))
+});
+
+// Reload the css on font-preset change.
+gulp.watch('font-presets.json', function () {
+   gulp.run('postcss');
+});
+
+```
+
 ### How to use?
 
-Add the plugin to grunt or gulp like you normally would with a postcss plugin.
 Give a settings JSON file like the following to it:
 
 ```
@@ -48,3 +71,4 @@ body {
 
 ### Tests
 RhythmMeister is tested with [ava](https://github.com/avajs/ava).
+Run 'gulp' to test.

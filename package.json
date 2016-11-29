@@ -10,12 +10,9 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
-    "browser-sync": "^2.17.5",
     "gulp": "^3.9.1",
     "gulp-ava": "^0.14.1",
-    "gulp-postcss": "^6.2.0",
-    "jspm": "^0.16.48",
-    "postcss-merge-longhand": "^2.0.1"
+    "postcss": "^5.2.6"
   },
   "keywords": [
     "postcss",
@@ -29,13 +26,5 @@
   "bugs": {
     "url": "https://github.com/danielbeeke/rhythmmeister/issues"
   },
-  "homepage": "http://rhythmmeister.com",
-  "jspm": {
-    "dependencies": {},
-    "devDependencies": {
-      "babel": "npm:babel-core@^5.8.24",
-      "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
-    }
-  }
+  "homepage": "http://rhythmmeister.com"
 }
