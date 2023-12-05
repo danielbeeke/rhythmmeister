@@ -1,0 +1,48 @@
+body {
+  padding: 0;
+  margin: 4rs;
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  grid-template-columns: 'left right';
+  gap: 40px;
+}
+
+body.show-grid {
+  vertical-rhythm-grid: #000000 #ffffff #bbb #ffffff 1px 4;
+}
+
+p {
+  margin: 0;
+  font-preset: paragraphs;
+  margin-bottom: 2rs;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+h1 {
+  font-preset: header-medium;
+}
+
+h2 {
+  font-preset: header-light;
+  margin-top: 1rs;
+  margin-bottom: 0rs;
+}
+
+h3 {
+  font-preset: header-lighter;
+}
+
+.block {
+  background-color: red;
+  height: 4rs;
+  width: 8rs;
+}
+
+button {
+  height: 5rs;
+}

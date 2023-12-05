@@ -36,7 +36,7 @@
     },
     "header-light": {
       "rows": 5,
-      "base-line-percentage": 0.875,
+      "base-line-percentage": 0.82,
       "font-family": "'Open Sans', serif",
       "font-weight": 300,
       "font-size": "32px",
